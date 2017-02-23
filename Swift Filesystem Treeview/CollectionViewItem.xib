@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="CollectionViewItem" customModule="Swift_Filesystem_Treeview" customModuleProvider="target">
+            <connections>
+                <outlet property="imageView" destination="2Nd-e6-iGQ" id="qAs-Gd-Ict"/>
+                <outlet property="textField" destination="3kI-US-NRR" id="1xU-xA-0jR"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="Cr6-Go-r3f"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="216" height="184"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Nd-e6-iGQ" customClass="DoubleActionImageView" customModule="Swift_Filesystem_Treeview" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="19" width="216" height="165"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="qtT-rJ-soY"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3kI-US-NRR">
+                    <rect key="frame" x="0.0" y="2" width="216" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="cAE-CU-b6H">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="3kI-US-NRR" firstAttribute="top" secondItem="2Nd-e6-iGQ" secondAttribute="bottom" id="0CB-Ax-RqC"/>
+                <constraint firstAttribute="trailing" secondItem="2Nd-e6-iGQ" secondAttribute="trailing" id="2KE-7P-mn4"/>
+                <constraint firstItem="3kI-US-NRR" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="165" id="2mU-Ek-UZR"/>
+                <constraint firstItem="2Nd-e6-iGQ" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="8Kz-uA-5mB"/>
+                <constraint firstAttribute="bottom" secondItem="3kI-US-NRR" secondAttribute="bottom" constant="2" id="AnY-B8-Wn6"/>
+                <constraint firstItem="3kI-US-NRR" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="2" id="Gfx-ni-exr"/>
+                <constraint firstItem="2Nd-e6-iGQ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="i2w-FP-6uc"/>
+                <constraint firstAttribute="trailing" secondItem="3kI-US-NRR" secondAttribute="trailing" constant="2" id="loS-Ep-0dD"/>
+            </constraints>
+        </customView>
+        <collectionViewItem id="OBb-8T-Gxn" customClass="CollectionViewItem" customModule="Swift_Filesystem_Treeview" customModuleProvider="target"/>
+    </objects>
+</document>
