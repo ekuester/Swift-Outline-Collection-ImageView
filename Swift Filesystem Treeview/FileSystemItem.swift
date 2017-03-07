@@ -45,18 +45,26 @@ class FileSystemItem: NSObject {
         return resourceValues?.isDirectory
     }
     
-    var isImageFile: Bool {
+    var isEPS: Bool {
+        return type == "com.adobe.encapsulated-postscript"
+    }
+    
+    var isImage: Bool {
         return UTTypeConformsTo(type as! CFString, kUTTypeImage)
+    }
+    
+    var isPDF: Bool {
+        return type == "com.adobe.pdf"
     }
     
     var parent: FileSystemItem? = nil
     var children: [FileSystemItem] {
         var childs: [FileSystemItem] = []
         let fileManager = FileManager.default
-        // show no hidden Files (if you want this, remove // on out next line)
+        // show no hidden Files (if you want this, remove .skipsHiddenFiles in next line)
         let options: FileManager.DirectoryEnumerationOptions =
             [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants]
-        //        var directoryURL = ObjCBool(false)
+        // var directoryURL = ObjCBool(false)
         let validURL = fileManager.fileExists(atPath: fileURL.relativePath)
         if (validURL && self.isDirectory!) {
             // contents of directory
@@ -79,80 +87,48 @@ class FileSystemItem: NSObject {
         return (self.isDirectory! && (self.children.count > 0))
     }
     
-    // adapted from <https://blog.alexseifert.com/2016/06/18/resize-an-nsimage-proportionately-in-swift/>
-    func sizeImage(_ image:NSImage?, into size: CGSize) -> NSImage? {
-        // not necessary, collection view resizes much mor quicker
-        if let image = image {
-            var imageRect = CGRect.zero
-            imageRect.size = image.size
-            let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: [:])
-            let imageAspectRatio = image.size.width / image.size.height
-            // resize dimensions for new image
-            var newSize = size
-            if (imageAspectRatio > 1.0) {
-                newSize.height = size.width / imageAspectRatio
-            }
-            else {
-                newSize.width = size.height * imageAspectRatio
-            }
-            // Create new image from CGImage using new size
-            return NSImage(cgImage: cgImage!, size: newSize)
-        }
-        return nil
+    // thumbnail size 216 x 162 (= 4 : 3) for image, plus 216 x 22 for Label, gives 216 x 184 pixel
+    fileprivate let thumbSize = CGSize(width: 216.0, height: 184.0)
+    
+    fileprivate func imageFrom(_ imageRep: NSImageRep, size: NSSize) -> NSImage? {
+        return NSImage(size: size, flipped: false, drawingHandler:
+            {   (rect: CGRect) in
+                // set fill color
+                NSColor.white.setFill()
+                // fill image rect with white background
+                NSRectFill(rect)
+                imageRep.draw(in: rect)
+                return true
+            })
     }
     
     // thumbnail from image file at url
     var thumbnail: NSImage? {
-        switch self.type {
-        case "com.adobe.pdf"?:
-            do {
-                let pdfData = try Data(contentsOf: self.fileURL)
-                if let pdfImageRep = NSPDFImageRep(data: pdfData) {
+        guard isEPS || isImage || isPDF
+            else { return nil }
+        var imageData: Data
+        do {
+            imageData = try Data(contentsOf: self.fileURL)
+            if isPDF {
+                if let pdfImageRep = NSPDFImageRep(data: imageData) {
                     // make image for first page
                     pdfImageRep.currentPage = 0
-                    let imageRect = NSRectToCGRect(pdfImageRep.bounds)
-                    // fill image rect with white background
-                    let image = NSImage(size: imageRect.size, flipped: false, drawingHandler:
-                        {   (rect: CGRect) in
-                            // set fill color
-                            NSColor.white.setFill()
-                            NSRectFill(rect)
-                            pdfImageRep.draw(in: rect)
-                            return true
-                    })
-                    let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: [:])
-                    return NSImage(cgImage: cgImage!, size: imageRect.size)
+                    return imageFrom(pdfImageRep, size: pdfImageRep.bounds.size)
                 }
             }
-            catch let error as NSError {
-                print("error reading pdf: \(error.localizedDescription) in \(error.domain)")
-            }
-        case "com.adobe.encapsulated-postscript"?:
-            // eps documents have per definitionem one page
-            do {
-                let epsData = try Data(contentsOf: self.fileURL)
-                if let epsImageRep = NSEPSImageRep(data: epsData) {
-                    let imageRect = NSRectToCGRect(epsImageRep.boundingBox)
-                    // fill image rect with white background
-                    let image = NSImage(size: imageRect.size, flipped: false, drawingHandler:
-                        {   (rect: CGRect) in
-                            // set fill color
-                            NSColor.white.setFill()
-                            NSRectFill(rect)
-                            epsImageRep.draw(in: rect)
-                            return true
-                    })
-                    let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: [:])
-                    return NSImage(cgImage: cgImage!, size: NSSize.zero)
+            if isEPS {
+                // eps documents have per definitionem only one page
+                if let epsImageRep = NSEPSImageRep(data: imageData) {
+                    return imageFrom(epsImageRep, size: epsImageRep.boundingBox.size)
                 }
             }
-            catch let error as NSError {
-                print("error reading eps: \(error.localizedDescription) in \(error.domain)")
+            if isImage {
+                // if used in a collection view, no creation of thumbnail is fastest variant
+                return NSImage(data: imageData)
             }
-        default:
-            if self.isImageFile {
-                return NSImage(byReferencing: self.fileURL)
-            }
+        }
+        catch let error as NSError {
+            print("error reading data from url: \(error.localizedDescription) in \(error.domain)")
         }
         return nil
     }

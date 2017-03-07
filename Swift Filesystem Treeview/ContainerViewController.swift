@@ -27,6 +27,7 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
     var defaultSession: URLSession!
     var mainFrame: NSRect!
     var mainContent: NSRect!
+    var middleContent = NSRect.zero
     var rightContent = NSRect.zero
     
     var imageBitmaps = [NSImageRep]()
@@ -67,8 +68,10 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
         let mainStoryboard: NSStoryboard = NSStoryboard(name: "Main", bundle: nil)
         let outlineViewController = mainStoryboard.instantiateController(withIdentifier: "outlineViewController") as! OutlineViewController
         self.insertChildViewController(outlineViewController, at: 0)
+        let imageViewController = mainStoryboard.instantiateController(withIdentifier: "imageViewController") as! NSViewController
+        self.insertChildViewController(imageViewController, at: 1)
         let collectionViewController = mainStoryboard.instantiateController(withIdentifier: "collectionViewController") as! CollectionViewController
-        self.insertChildViewController(collectionViewController, at: 1)
+        self.insertChildViewController(collectionViewController, at: 2)
         let presentationOptions: NSApplicationPresentationOptions = [.hideDock, .autoHideMenuBar]
         NSApp.presentationOptions = presentationOptions
         // get dimensions for view frame
@@ -81,21 +84,29 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
         super.viewDidAppear()
         // now window exists
         let outlineViewController = self.childViewControllers[0]
-        let collectionViewController = self.childViewControllers[1]
+        let imageViewController = self.childViewControllers[1]
+        let collectionViewController = self.childViewControllers[2]
         let containerWindow = self.view.window!
         containerWindow.delegate = self
         var leftFrame = NSRect.zero
+        var middleFrame = NSRect.zero
         var rightFrame = NSRect.zero
-        let width = mainFrame.size.width
-        // divide main frame in 3 : 7 ratio
-        NSDivideRect(mainFrame, &leftFrame, &rightFrame, width*0.3, .minX)
+        // divide main frame in 2 : 8 ratio
+        var width = mainFrame.size.width / 5
+        NSDivideRect(mainFrame, &leftFrame, &middleFrame, width, .minX)
         mainContent = containerWindow.contentRect(forFrameRect: mainFrame)
         let leftContent = containerWindow.contentRect(forFrameRect: leftFrame)
+        // divide middle Frame in 0.42 : 0.58 ratio
+        width = middleFrame.size.width * 0.42
+        NSDivideRect(middleFrame, &middleFrame, &rightFrame, width, .minX)
+        middleContent = containerWindow.contentRect(forFrameRect: middleFrame)
         rightContent = containerWindow.contentRect(forFrameRect: rightFrame)
         self.view.addSubview(outlineViewController.view)
         self.view.addSubview(collectionViewController.view)
+        self.view.addSubview(imageViewController.view)
         outlineViewController.view.animator().frame = leftContent
-        collectionViewController.view.animator().frame = rightContent
+        collectionViewController.view.animator().frame = middleContent
+        imageViewController.view.animator().frame = rightContent
         // set frame for container view window
         containerWindow.setFrame(mainFrame, display: true, animate: true)
     }
@@ -132,24 +143,18 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
         imageBitmaps = NSBitmapImageRep.imageReps(with: graphicsData)
         if (imageBitmaps.count == 0) {
             // convert pdf and eps image rep to bitmap image rep
-            let fileType = imageFileItems?[index].type
+            guard let imageFileItem = imageFileItems?[index]
+                else { return }
             // try pdf document
-            if fileType == "com.adobe.pdf" {
+            if imageFileItem.isPDF {
                 if let pdfImageRep = NSPDFImageRep(data: graphicsData) {
                     let pageCount = pdfImageRep.pageCount
                     for i in 0..<pageCount {
                         // make image for each page
                         pdfImageRep.currentPage = i
-                        // fill image rect with white background
-                        let image = NSImage(size: pdfImageRep.size, flipped: false, drawingHandler:
-                            {   (rect: NSRect) in
-                            // set fill color
-                            NSColor.white.setFill()
-                            NSRectFill(rect)
-                            pdfImageRep.draw(in: rect)
-                            return true
-                        })
-                        let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: [:])
+                        var pageRect = pdfImageRep.bounds
+                        // now convert PDFImageRep to BitmapImageRep
+                        let cgImage = pdfImageRep.cgImage(forProposedRect: &pageRect, context: nil, hints: [NSImageHintInterpolation: NSImageInterpolation.default.rawValue])
                         let imageRep = NSBitmapImageRep(cgImage: cgImage!)
                         imageBitmaps.append(imageRep)
                     }
@@ -159,36 +164,14 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
             if (NSEPSImageRep(data: graphicsData) != nil) {
                 if let epsImageRep = NSEPSImageRep(data: graphicsData) {
                     // EPS contains always only one page
-                    // fill image rect with white background
-                    let image = NSImage(size: epsImageRep.size, flipped: false, drawingHandler:
-                        {   (rect: NSRect) in
-                            // set fill color
-                            NSColor.white.setFill()
-                            NSRectFill(rect)
-                            epsImageRep.draw(in: rect)
-                            return true
-                    })
-                    let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: [:])
+                    var pageRect = epsImageRep.boundingBox
+                    // now convert EPSImageRep to BitmapImageRep
+                    let cgImage = epsImageRep.cgImage(forProposedRect: &pageRect, context: nil, hints: [NSImageHintInterpolation: NSImageInterpolation.default.rawValue])
                     let imageRep = NSBitmapImageRep(cgImage: cgImage!)
                     imageBitmaps.append(imageRep)
                 }
             }
         }
-    }
-    
-    func size(imageRep: NSImageRep, in rect: NSRect) -> NSImageRep {
-        let image = NSImage(size: rect.size)
-        image.addRepresentation(imageRep)
-        
-        image.lockFocus()
-        // fill bitmap with white background
-        NSColor.white.setFill()
-        NSRectFill(rect)
-        // draw image over the background
-        image.draw(in: rect)
-        image.unlockFocus()
-        
-        return image.representations.first!
     }
     
     // look also at <https://blog.alexseifert.com/2016/06/18/resize-an-nsimage-proportionately-in-swift/>
@@ -217,8 +200,8 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
     }
     
     func imageViewWithBitmap() {
-        let destinationController = self.childViewControllers[1]
-        let imageSubview = destinationController.view.subviews[0] as! NSImageView
+        let destinationController = self.childViewControllers[2]
+        let imageSubview = destinationController.view.subviews[1] as! NSImageView
         let imageItemFile = imageFileItems?[imageFileIndex]
         if (imageBitmaps.count > 0) {
             let imageBitmap = imageBitmaps[pageIndex]
@@ -292,7 +275,7 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
     }
     
     func backToCollection(_ sender: Any) {
-        let controller = self.childViewControllers[1]
+        let controller = self.childViewControllers[2]
         controller.performSegue(withIdentifier: "CollectionViewSegue", sender: controller)
     }
     
@@ -300,10 +283,12 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
     func windowWillEnterFullScreen(_ notification: Notification) {
         inFullScreen = true
         let outlineController = self.childViewControllers[0]
-        let controller = self.childViewControllers[1]
+        let imageController = self.childViewControllers[1]
+        let controller = self.childViewControllers[2]
         // check if controller is of class collection view controller
         if (controller is CollectionViewController) {
             outlineController.view.removeFromSuperview()
+            imageController.view.removeFromSuperview()
             controller.view.frame = mainFrame
         }
         else {
@@ -320,12 +305,14 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
         // window will exit full screen mode
         inFullScreen = false
         let outlineController = self.childViewControllers[0]
-        let controller = self.childViewControllers[1]
+        let imageController = self.childViewControllers[1]
+        let controller = self.childViewControllers[2]
         // check if controller is of class collection view controller
         if (controller is CollectionViewController) {
-            // set frame of collection view
-            controller.view.frame = rightContent
             self.view.addSubview(outlineController.view)
+            // set frame of collection view
+            controller.view.frame = middleContent
+            self.view.addSubview(imageController.view)
         }
         else {
             // set image view origin back to zero
@@ -336,7 +323,7 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
     func windowDidExitFullScreen(_ notification: Notification) {
         // window did exit full screen mode
         let containerWindow = self.view.window!
-        let controller = self.childViewControllers[1]
+        let controller = self.childViewControllers[2]
         let frameRect = (controller is CollectionViewController) ? mainFrame! : viewFrame
         containerWindow.setFrame(frameRect, display: true, animate: true)
     }

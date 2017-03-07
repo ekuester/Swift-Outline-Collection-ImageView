@@ -20,7 +20,7 @@
             <subviews>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Nd-e6-iGQ" customClass="DoubleActionImageView" customModule="Swift_Filesystem_Treeview" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="19" width="216" height="165"/>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="qtT-rJ-soY"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="qtT-rJ-soY"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3kI-US-NRR">
                     <rect key="frame" x="0.0" y="2" width="216" height="17"/>

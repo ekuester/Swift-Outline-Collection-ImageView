@@ -26,9 +26,10 @@ class CrossfadeStoryboardSegue: NSStoryboardSegue {
         let sourceViewController  = self.sourceController as! NSViewController
         let destinationViewController = self.destinationController as! NSViewController
         let parentController = sourceViewController.parent! as! ContainerViewController
-        let outlineViewController = parentController.childViewControllers.first as! OutlineViewController
+        let outlineController = parentController.childViewControllers[0] as! OutlineViewController
+        let imageController = parentController.childViewControllers[1] as! NSViewController
         // add destinationViewController as child
-        parentController.insertChildViewController(destinationViewController, at: 2)
+        parentController.insertChildViewController(destinationViewController, at: 3)
         // prepare for animation
         sourceViewController.view.wantsLayer = true
         destinationViewController.view.wantsLayer = true
@@ -37,14 +38,15 @@ class CrossfadeStoryboardSegue: NSStoryboardSegue {
         let containerWindow = parentController.view.window!
         if self.sourceController is CollectionViewController {
             if !parentController.inFullScreen {
-                // remove outline view
-                outlineViewController.view.removeFromSuperview()
+                // remove outline and image view
+                outlineController.view.removeFromSuperview()
+                imageController.view.removeFromSuperview()
             }
             // show single image
             parentController.transition(from: sourceViewController, to: destinationViewController, options: [NSViewControllerTransitionOptions.crossfade], completionHandler: nil)
 
             // lose the not longer required sourceViewController, it's no longer visible
-            parentController.removeChildViewController(at: 1)
+            parentController.removeChildViewController(at: 2)
 
             let imageFileIndex = parentController.imageFileIndex
             parentController.imageViewfromImageFileIndex(imageFileIndex)
@@ -54,7 +56,7 @@ class CrossfadeStoryboardSegue: NSStoryboardSegue {
         }
         else {
             // show collection view again
-            let targetRect = parentController.inFullScreen ? parentController.mainFrame! : parentController.rightContent
+            let targetRect = parentController.inFullScreen ? parentController.mainFrame! : parentController.middleContent
             parentController.transition(from: sourceViewController, to: destinationViewController, options: [NSViewControllerTransitionOptions.crossfade], completionHandler: nil)
             containerWindow.setTitleWithRepresentedFilename("Choose a Directory on the Left")
             //resize view controller
@@ -63,9 +65,10 @@ class CrossfadeStoryboardSegue: NSStoryboardSegue {
             // set frame for container view window
             containerWindow.setFrame(parentController.mainFrame, display: true, animate: true)
             // lose the not longer required sourceViewController, it's no longer visible
-            parentController.removeChildViewController(at: 1)
+            parentController.removeChildViewController(at: 2)
             if !parentController.inFullScreen {
-                parentController.view.addSubview(outlineViewController.view)
+                parentController.view.addSubview(outlineController.view)
+                parentController.view.addSubview(imageController.view)
             }
             // remove submenu "Navigate"
             NSApp.mainMenu?.removeItem(at: 5)

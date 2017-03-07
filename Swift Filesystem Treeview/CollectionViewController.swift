@@ -53,6 +53,9 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
         collectionView.layer?.backgroundColor = NSColor.darkGray.cgColor
         registerForDragAndDrop()
         collectionView.reloadData()
+        // select first item of collection view
+        collectionView(collectionView, didSelectItemsAt: [IndexPath(item: 0, section: 0)])
+        collectionView.selectionIndexPaths.insert(IndexPath(item: 0, section: 0))
     }
     
     override func viewWillDisappear() {
@@ -62,12 +65,12 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
     
     private func configureCollectionView() {
         collectionView.wantsLayer = true
-        // item size 216 x 162 (= 4 : 3) for image  and 216 x 22 for Label, 216 x 184 pixel
+        // item size 216 x 162 (= 4 : 3) for image, plus 216 x 22 for Label, gives 216 x 184 pixel
         let flowLayout = NSCollectionViewFlowLayout()
         flowLayout.itemSize = NSSize(width: 216.0, height: 184.0)
-        flowLayout.sectionInset = EdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+        flowLayout.sectionInset = EdgeInsets(top: 10.0, left: 5.0, bottom: 10.0, right: 15.0)
         flowLayout.minimumInteritemSpacing = 10.0
-        flowLayout.minimumLineSpacing = 10.0
+        flowLayout.minimumLineSpacing = 5.0
         collectionView.collectionViewLayout = flowLayout
     }
     
@@ -114,6 +117,9 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
             else { return }
         guard let item = collectionView.item(at: indexPath) as? CollectionViewItem
             else { return }
+        let image = item.imageFile?.thumbnail
+        let imageView = parentController.childViewControllers[1].view.subviews[0] as! NSImageView
+        imageView.image = image
         item.setHighlight(true)
     }
     // 2
@@ -154,6 +160,9 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
                     }
                 }
                 collectionView.reloadData()
+                // select first item of collection view again
+                collectionView(collectionView, didSelectItemsAt: [IndexPath(item: 0, section: 0)])
+                collectionView.selectionIndexPaths.insert(IndexPath(item: 0, section: 0))
             }
         }
     }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -691,7 +692,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <collectionView selectable="YES" id="e2W-0M-mdF">
+                                        <collectionView selectable="YES" maxNumberOfColumns="1" id="e2W-0M-mdF">
                                             <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -737,14 +738,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <box boxType="custom" borderType="none" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="0rw-OF-dQp" userLabel="Color Box">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
+                                <view key="contentView" id="PRc-0E-iwY">
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <color key="fillColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </box>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AeV-le-p4m">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="nfg-ml-wwJ"/>
                             </imageView>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="0rw-OF-dQp" secondAttribute="bottom" id="8FL-nW-YOj"/>
                             <constraint firstItem="AeV-le-p4m" firstAttribute="leading" secondItem="jsM-1o-YS9" secondAttribute="leading" id="Q0h-gE-XbS"/>
                             <constraint firstAttribute="bottom" secondItem="AeV-le-p4m" secondAttribute="bottom" id="YNx-bs-XXh"/>
+                            <constraint firstItem="0rw-OF-dQp" firstAttribute="leading" secondItem="jsM-1o-YS9" secondAttribute="leading" id="YY3-Oc-9EC"/>
+                            <constraint firstItem="0rw-OF-dQp" firstAttribute="top" secondItem="jsM-1o-YS9" secondAttribute="top" id="iCv-9H-Bkv"/>
+                            <constraint firstAttribute="trailing" secondItem="0rw-OF-dQp" secondAttribute="trailing" id="jtk-sK-Xin"/>
                             <constraint firstItem="AeV-le-p4m" firstAttribute="top" secondItem="jsM-1o-YS9" secondAttribute="top" id="xJE-q9-wCP"/>
                             <constraint firstAttribute="trailing" secondItem="AeV-le-p4m" secondAttribute="trailing" id="yav-hB-fGN"/>
                         </constraints>
@@ -755,7 +768,7 @@
                 </viewController>
                 <customObject id="Ylw-8U-x6e" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="637" y="612"/>
+            <point key="canvasLocation" x="671" y="792"/>
         </scene>
         <!--Container View Controller-->
         <scene sceneID="ncS-Tf-Ogn">
@@ -768,7 +781,32 @@
                 </viewController>
                 <customObject id="eZc-ei-L7N" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="637" y="51"/>
+            <point key="canvasLocation" x="671" y="51"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="eS6-bG-sGv">
+            <objects>
+                <viewController storyboardIdentifier="imageViewController" id="ouW-w4-1Wr" sceneMemberID="viewController">
+                    <view key="view" id="Znm-wy-9aD">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Yrp-1D-Ha8">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="ERj-rS-Hb7"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Yrp-1D-Ha8" firstAttribute="leading" secondItem="Znm-wy-9aD" secondAttribute="leading" id="3j0-91-i8Y"/>
+                            <constraint firstItem="Yrp-1D-Ha8" firstAttribute="top" secondItem="Znm-wy-9aD" secondAttribute="top" id="HPU-Z2-vn7"/>
+                            <constraint firstAttribute="bottom" secondItem="Yrp-1D-Ha8" secondAttribute="bottom" id="iuX-qV-Q9q"/>
+                            <constraint firstAttribute="trailing" secondItem="Yrp-1D-Ha8" secondAttribute="trailing" id="oaD-iu-QI5"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="1ph-Ya-0Is" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="671" y="418"/>
         </scene>
         <!--Outline View Controller-->
         <scene sceneID="hIz-AP-VOD">

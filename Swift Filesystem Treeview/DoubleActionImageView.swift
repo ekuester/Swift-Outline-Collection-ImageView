@@ -9,7 +9,7 @@
 import Cocoa
 
 class DoubleActionImageView: NSImageView {
-
+    
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
         // Drawing code here.
