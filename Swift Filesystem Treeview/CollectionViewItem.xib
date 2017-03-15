@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CollectionViewItem" customModule="Swift_Filesystem_Treeview" customModuleProvider="target">
             <connections>
+                <outlet property="contextMenu" destination="b5T-GU-Fbk" id="98R-L6-vFe"/>
                 <outlet property="imageView" destination="2Nd-e6-iGQ" id="qAs-Gd-Ict"/>
                 <outlet property="textField" destination="3kI-US-NRR" id="1xU-xA-0jR"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="Cr6-Go-r3f"/>
@@ -18,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="216" height="184"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Nd-e6-iGQ" customClass="DoubleActionImageView" customModule="Swift_Filesystem_Treeview" customModuleProvider="target">
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2Nd-e6-iGQ" customClass="ActionImageView" customModule="Swift_Filesystem_Treeview" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="19" width="216" height="165"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="qtT-rJ-soY"/>
                 </imageView>
@@ -43,5 +44,16 @@
             </constraints>
         </customView>
         <collectionViewItem id="OBb-8T-Gxn" customClass="CollectionViewItem" customModule="Swift_Filesystem_Treeview" customModuleProvider="target"/>
+        <menu title="Choose Item" id="b5T-GU-Fbk">
+            <items>
+                <menuItem title="Remove Item" id="i6k-SR-6QN">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="removeItem:" target="-1" id="ChN-qT-RKn"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="99" y="-3"/>
+        </menu>
     </objects>
 </document>

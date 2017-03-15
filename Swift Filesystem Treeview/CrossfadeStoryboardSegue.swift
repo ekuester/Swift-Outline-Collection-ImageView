@@ -27,7 +27,7 @@ class CrossfadeStoryboardSegue: NSStoryboardSegue {
         let destinationViewController = self.destinationController as! NSViewController
         let parentController = sourceViewController.parent! as! ContainerViewController
         let outlineController = parentController.childViewControllers[0] as! OutlineViewController
-        let imageController = parentController.childViewControllers[1] as! NSViewController
+        let imageController = parentController.childViewControllers[1]
         // add destinationViewController as child
         parentController.insertChildViewController(destinationViewController, at: 3)
         // prepare for animation
@@ -56,7 +56,7 @@ class CrossfadeStoryboardSegue: NSStoryboardSegue {
         }
         else {
             // show collection view again
-            let targetRect = parentController.inFullScreen ? parentController.mainFrame! : parentController.middleContent
+            let targetRect = parentController.inFullScreen ? parentController.mainFrame! : parentController.middleFrame
             parentController.transition(from: sourceViewController, to: destinationViewController, options: [NSViewControllerTransitionOptions.crossfade], completionHandler: nil)
             containerWindow.setTitleWithRepresentedFilename("Choose a Directory on the Left")
             //resize view controller

@@ -17,7 +17,7 @@
 		CC7112761E55B52D0085D932 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = CC7112741E55B52D0085D932 /* Credits.rtf */; };
 		CCB038251E4A4366009AFBC6 /* CollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB038231E4A4366009AFBC6 /* CollectionViewItem.swift */; };
 		CCB038261E4A4366009AFBC6 /* CollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCB038241E4A4366009AFBC6 /* CollectionViewItem.xib */; };
-		CCE2DC021E4A09FA00CDBC59 /* DoubleActionImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE2DC011E4A09FA00CDBC59 /* DoubleActionImageView.swift */; };
+		CCE2DC021E4A09FA00CDBC59 /* ActionImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE2DC011E4A09FA00CDBC59 /* ActionImageView.swift */; };
 		CCFA12071E49266F009C24AD /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCFA12061E49266F009C24AD /* CollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +34,7 @@
 		CC7112751E55B52D0085D932 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
 		CCB038231E4A4366009AFBC6 /* CollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewItem.swift; sourceTree = "<group>"; };
 		CCB038241E4A4366009AFBC6 /* CollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionViewItem.xib; sourceTree = "<group>"; };
-		CCE2DC011E4A09FA00CDBC59 /* DoubleActionImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleActionImageView.swift; sourceTree = "<group>"; };
+		CCE2DC011E4A09FA00CDBC59 /* ActionImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionImageView.swift; sourceTree = "<group>"; };
 		CCFA12061E49266F009C24AD /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,7 +84,7 @@
 			children = (
 				CCB038231E4A4366009AFBC6 /* CollectionViewItem.swift */,
 				CCB038241E4A4366009AFBC6 /* CollectionViewItem.xib */,
-				CCE2DC011E4A09FA00CDBC59 /* DoubleActionImageView.swift */,
+				CCE2DC011E4A09FA00CDBC59 /* ActionImageView.swift */,
 				CC12C0921E47900600F1D75B /* FileSystemItem.swift */,
 			);
 			name = Model;
@@ -186,7 +186,7 @@
 				CC0FB2B01E476ABB0095D8B4 /* OutlineViewController.swift in Sources */,
 				CCB038251E4A4366009AFBC6 /* CollectionViewItem.swift in Sources */,
 				CC12C0931E47900600F1D75B /* FileSystemItem.swift in Sources */,
-				CCE2DC021E4A09FA00CDBC59 /* DoubleActionImageView.swift in Sources */,
+				CCE2DC021E4A09FA00CDBC59 /* ActionImageView.swift in Sources */,
 				CC5F3F1E1E48CE13005B3650 /* ContainerViewController.swift in Sources */,
 				CC4C4EBC1E50E30E00E6030C /* CrossfadeStoryboardSegue.swift in Sources */,
 				CC0FB2AE1E476ABB0095D8B4 /* AppDelegate.swift in Sources */,

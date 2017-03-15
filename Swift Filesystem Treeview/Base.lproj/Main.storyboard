@@ -688,11 +688,11 @@
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2WI-ih-boH">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
-                                <clipView key="contentView" id="Jch-Yi-mP7">
+                                <clipView key="contentView" drawsBackground="NO" id="Jch-Yi-mP7">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <collectionView selectable="YES" maxNumberOfColumns="1" id="e2W-0M-mdF">
+                                        <collectionView selectable="YES" maxNumberOfRows="1" maxNumberOfColumns="1" id="e2W-0M-mdF">
                                             <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

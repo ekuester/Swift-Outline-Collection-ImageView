@@ -52,10 +52,6 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
         configureCollectionView()
         collectionView.layer?.backgroundColor = NSColor.darkGray.cgColor
         registerForDragAndDrop()
-        collectionView.reloadData()
-        // select first item of collection view
-        collectionView(collectionView, didSelectItemsAt: [IndexPath(item: 0, section: 0)])
-        collectionView.selectionIndexPaths.insert(IndexPath(item: 0, section: 0))
     }
     
     override func viewWillDisappear() {
@@ -69,9 +65,13 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
         let flowLayout = NSCollectionViewFlowLayout()
         flowLayout.itemSize = NSSize(width: 216.0, height: 184.0)
         flowLayout.sectionInset = EdgeInsets(top: 10.0, left: 5.0, bottom: 10.0, right: 15.0)
-        flowLayout.minimumInteritemSpacing = 10.0
-        flowLayout.minimumLineSpacing = 5.0
+        // 10.0 gives two columns, 1000.0 gives one column
+        flowLayout.minimumInteritemSpacing = 1000.0
+        flowLayout.minimumLineSpacing = 10.0
+        flowLayout.scrollDirection = NSCollectionViewScrollDirection.vertical
         collectionView.collectionViewLayout = flowLayout
+        // select first item of collection view
+        collectionView.selectItems(at: [IndexPath(item: 0, section: 0)], scrollPosition: NSCollectionViewScrollPosition.top)
     }
     
     func registerForDragAndDrop() {
@@ -99,8 +99,9 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
         let item = collectionView.makeItem(withIdentifier: "CollectionViewItem", for: indexPath)
         guard let collectionViewItem = item as? CollectionViewItem
             else { return item }
-        // if you want to use more than one section, code has to be changed
         collectionViewItem.imageFile = imageFileItems[indexPath.item]
+        collectionViewItem.imageViewController = parentController.childViewControllers[1]
+        // if you want to use more than one section, code has to be changed
         if let selectedIndexPath = collectionView.selectionIndexPaths.first, selectedIndexPath == indexPath {
             collectionViewItem.setHighlight(true)
         } else {
@@ -117,9 +118,6 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
             else { return }
         guard let item = collectionView.item(at: indexPath) as? CollectionViewItem
             else { return }
-        let image = item.imageFile?.thumbnail
-        let imageView = parentController.childViewControllers[1].view.subviews[0] as! NSImageView
-        imageView.image = image
         item.setHighlight(true)
     }
     // 2
@@ -149,6 +147,7 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
         }
     }
     
+    // load images for collection view and update
     func updateCollection(_ notification: Notification) {
         if let controller = notification.object as? OutlineViewController {
             fileSystemBase = controller.fileSystemBase
@@ -161,9 +160,21 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
                 }
                 collectionView.reloadData()
                 // select first item of collection view again
-                collectionView(collectionView, didSelectItemsAt: [IndexPath(item: 0, section: 0)])
-                collectionView.selectionIndexPaths.insert(IndexPath(item: 0, section: 0))
+                collectionView.selectItems(at: [IndexPath(item: 0, section: 0)], scrollPosition: NSCollectionViewScrollPosition.top)
             }
         }
     }
+    
+    // MARK: - context menu actions
+    @IBAction func removeItem(_ sender: Any) {
+        if let menuItem = sender as? NSMenuItem {
+            guard let item = menuItem.representedObject as? CollectionViewItem
+                else { return }
+            if let indexPath = collectionView.indexPath(for: item) {
+                imageFileItems.remove(at: indexPath.item)
+                collectionView.deleteItems(at: [indexPath])
+            }
+        }
+    }
+    
 }

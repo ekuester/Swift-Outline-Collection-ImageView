@@ -16,8 +16,9 @@ class OutlineViewController: NSViewController, NSOutlineViewDelegate, NSOutlineV
     @IBOutlet weak var outlineView: NSOutlineView!
     @IBOutlet weak var pathController: NSPathControl!
     
-    let propertyKeys: [URLResourceKey] = [.localizedNameKey, .effectiveIconKey, .isDirectoryKey, .typeIdentifierKey]
     let lightCyanColor = CGColor(red: 0.897039 , green: 0.924751, blue: 0.974603, alpha: 1.0)
+    let propertyKeys: [URLResourceKey] = [.localizedNameKey, .effectiveIconKey, .isDirectoryKey, .typeIdentifierKey]
+    let sharedDocumentController = NSDocumentController.shared()
     
     var fileSystemBase: FileSystemItem!
     var recentItemsObserver: NSObjectProtocol!
@@ -37,7 +38,7 @@ class OutlineViewController: NSViewController, NSOutlineViewDelegate, NSOutlineV
         // notification if file from recent documents should be opened
         recentItemsObserver = NotificationCenter.default.addObserver(forName: Notification.Name(rawValue: "com.image.openview"), object: nil, queue: nil, using: openView)
         let userDirectoryURL = URL(fileURLWithPath: NSHomeDirectory())
-        // directory "Pictures" is set as base folder
+        // start with directory "Pictures" as base folder
         let folderURL = userDirectoryURL.appendingPathComponent("Pictures", isDirectory: true)
         pathController.url = folderURL
         fileSystemBase = FileSystemItem(url: folderURL)
@@ -86,8 +87,8 @@ class OutlineViewController: NSViewController, NSOutlineViewDelegate, NSOutlineV
             }
             DispatchQueue.main.async {
                 if let url = folderDialog.url {
-                    // note url in recent documents
-                    NSDocumentController.shared().noteNewRecentDocumentURL(url)
+                    // note url of recent documents
+                    self.sharedDocumentController.noteNewRecentDocumentURL(url)
                     self.pathController.url = url
                     self.fileSystemBase = FileSystemItem(url: url)
                     self.outlineView.reloadData()
@@ -118,8 +119,8 @@ class OutlineViewController: NSViewController, NSOutlineViewDelegate, NSOutlineV
     // MARK: - notifications
     func openView(_ notification: Notification) {
         if let url = notification.object as? URL {
-            // note url in recent documents again
-            NSDocumentController.shared().noteNewRecentDocumentURL(url)
+            // note url of recent documents again
+            sharedDocumentController.noteNewRecentDocumentURL(url)
             self.pathController.url = url
             self.fileSystemBase = FileSystemItem(url: url)
             self.outlineView.reloadData()

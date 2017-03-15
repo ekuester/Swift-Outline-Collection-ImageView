@@ -27,8 +27,8 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
     var defaultSession: URLSession!
     var mainFrame: NSRect!
     var mainContent: NSRect!
-    var middleContent = NSRect.zero
-    var rightContent = NSRect.zero
+    var middleFrame = NSRect.zero
+    var rightFrame = NSRect.zero
     
     var imageBitmaps = [NSImageRep]()
     var imageFileItems: [FileSystemItem]? = nil
@@ -89,24 +89,20 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
         let containerWindow = self.view.window!
         containerWindow.delegate = self
         var leftFrame = NSRect.zero
-        var middleFrame = NSRect.zero
-        var rightFrame = NSRect.zero
-        // divide main frame in 2 : 8 ratio
-        var width = mainFrame.size.width / 5
-        NSDivideRect(mainFrame, &leftFrame, &middleFrame, width, .minX)
+        // subtract height of window title bar
         mainContent = containerWindow.contentRect(forFrameRect: mainFrame)
-        let leftContent = containerWindow.contentRect(forFrameRect: leftFrame)
-        // divide middle Frame in 0.42 : 0.58 ratio
-        width = middleFrame.size.width * 0.42
+        // divide main content in 2 : 8 ratio
+        var width = mainContent.size.width / 5
+        NSDivideRect(mainContent, &leftFrame, &middleFrame, width, .minX)
+        // divide middle Frame in 1 : 3 ratio
+        width = middleFrame.size.width * 0.25
         NSDivideRect(middleFrame, &middleFrame, &rightFrame, width, .minX)
-        middleContent = containerWindow.contentRect(forFrameRect: middleFrame)
-        rightContent = containerWindow.contentRect(forFrameRect: rightFrame)
         self.view.addSubview(outlineViewController.view)
         self.view.addSubview(collectionViewController.view)
         self.view.addSubview(imageViewController.view)
-        outlineViewController.view.animator().frame = leftContent
-        collectionViewController.view.animator().frame = middleContent
-        imageViewController.view.animator().frame = rightContent
+        outlineViewController.view.animator().frame = leftFrame
+        collectionViewController.view.animator().frame = middleFrame
+        imageViewController.view.animator().frame = rightFrame
         // set frame for container view window
         containerWindow.setFrame(mainFrame, display: true, animate: true)
     }
@@ -311,7 +307,7 @@ class ContainerViewController: NSViewController, NSWindowDelegate {
         if (controller is CollectionViewController) {
             self.view.addSubview(outlineController.view)
             // set frame of collection view
-            controller.view.frame = middleContent
+            controller.view.frame = middleFrame
             self.view.addSubview(imageController.view)
         }
         else {

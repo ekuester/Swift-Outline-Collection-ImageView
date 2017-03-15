@@ -1,4 +1,4 @@
-//
+﻿//
 //  FileSystemItem.swift
 //  Swift Filesystem Treeview
 //
@@ -57,6 +57,10 @@ class FileSystemItem: NSObject {
         return type == "com.adobe.pdf"
     }
     
+    var isZIP: Bool {
+        return type == "public.zip-archive"
+    }
+
     var parent: FileSystemItem? = nil
     var children: [FileSystemItem] {
         var childs: [FileSystemItem] = []
