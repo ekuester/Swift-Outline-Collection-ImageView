@@ -65,8 +65,8 @@ class CollectionViewController: NSViewController, NSCollectionViewDataSource, NS
         let flowLayout = NSCollectionViewFlowLayout()
         flowLayout.itemSize = NSSize(width: 216.0, height: 184.0)
         flowLayout.sectionInset = EdgeInsets(top: 10.0, left: 5.0, bottom: 10.0, right: 15.0)
-        // 10.0 gives two columns, 1000.0 gives one column
-        flowLayout.minimumInteritemSpacing = 1000.0
+        // minimum interitem spacing controls number of columns
+        flowLayout.minimumInteritemSpacing = 10.0
         flowLayout.minimumLineSpacing = 10.0
         flowLayout.scrollDirection = NSCollectionViewScrollDirection.vertical
         collectionView.collectionViewLayout = flowLayout
